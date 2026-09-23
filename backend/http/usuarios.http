@@ -1,0 +1,171 @@
+@baseUrl = http://localhost:3000/api/users
+@contentType = application/json
+
+
+#################################################
+# 1. LISTAR TODOS LOS USUARIOS
+#################################################
+
+GET {{baseUrl}}
+
+
+
+#################################################
+# 2. CREAR USUARIO
+#################################################
+
+# @name crearUsuario
+
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Juan Perez",
+    "email": "juan{{$randomInt 1000 9999}}@gmail.com"
+}
+
+
+
+#################################################
+# 3. OBTENER USUARIO CREADO
+#################################################
+
+GET {{baseUrl}}/{{crearUsuario.response.body.$.id}}
+
+
+
+#################################################
+# 4. ACTUALIZAR USUARIO
+#################################################
+
+PUT {{baseUrl}}/{{crearUsuario.response.body.$.id}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Juan Perez Actualizado"
+}
+
+
+
+#################################################
+# 5. VERIFICAR ACTUALIZACION
+#################################################
+
+GET {{baseUrl}}/{{crearUsuario.response.body.$.id}}
+
+
+
+#################################################
+# 6. CREAR SEGUNDO USUARIO
+#################################################
+
+# @name crearSegundoUsuario
+
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+    "name": "Maria Lopez",
+    "email": "maria{{$randomInt 1000 9999}}@gmail.com"
+}
+
+
+
+#################################################
+# 7. LISTAR TODOS NUEVAMENTE
+#################################################
+
+GET {{baseUrl}}
+
+
+
+#################################################
+# 8. BUSCAR USUARIO QUE NO EXISTE
+#################################################
+
+GET {{baseUrl}}/999999
+
+
+
+#################################################
+# 9. ID INVALIDO (ERROR 400)
+#################################################
+
+GET {{baseUrl}}/abc
+
+
+
+#################################################
+# 10. CREAR USUARIO SIN CAMPOS OBLIGATORIOS
+#################################################
+
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+}
+
+
+
+#################################################
+# 11. EMAIL INVALIDO
+#################################################
+
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+    "name":"Pedro",
+    "email":"correo-invalido"
+}
+
+
+
+#################################################
+# 12. EMAIL DUPLICADO
+#################################################
+
+POST {{baseUrl}}
+Content-Type: {{contentType}}
+
+{
+    "name":"Juan Perez",
+    "email":"juan@gmail.com"
+}
+
+
+
+#################################################
+# 13. ACTUALIZAR USUARIO EXISTENTE
+#################################################
+
+PUT {{baseUrl}}/{{crearSegundoUsuario.response.body.$.id}}
+Content-Type: {{contentType}}
+
+{
+    "email":"nuevo{{$randomInt 1000 9999}}@gmail.com"
+}
+
+
+
+#################################################
+# 14. ELIMINAR USUARIO
+#################################################
+
+DELETE {{baseUrl}}/{{crearSegundoUsuario.response.body.$.id}}
+
+
+
+#################################################
+# 15. VERIFICAR QUE FUE ELIMINADO
+#################################################
+
+GET {{baseUrl}}/{{crearSegundoUsuario.response.body.$.id}}
+
+
+
+#################################################
+# 16. ELIMINAR USUARIO INEXISTENTE
+#################################################
+
+DELETE {{baseUrl}}/999999
